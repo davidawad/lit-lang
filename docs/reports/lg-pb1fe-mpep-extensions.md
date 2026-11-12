@@ -36,8 +36,10 @@ field in this language, so the motion's legal source includes the required
 
 ## Inline examples and replay
 
-Inline tests in `lit/mpep/deadlines.lit` cover accepted grants for all seven
-grant families and the MPEP month-end dates. The language replay test in
+Inline tests in `lit/mpep/deadlines.lit` cover an accepted grant and a
+petition beyond the grant window for each of the seven grant families; each
+late petition leaves the period unextended. The MPEP month-end cases verify
+that the bound is counted from its trigger. The language replay test in
 `crates/litigate-sema/tests/cov_case_obligations.rs` covers the bound refusal:
 a proposal one day beyond a January 31 trigger's May 31 ceiling is rejected;
 it also checks a November 30 trigger, whose four-month nominal end is March
@@ -85,7 +87,7 @@ text is typed or locked; no strict extension holes remain.
 - `cargo clippy --workspace --all-targets -- -D warnings`: passed.
 - `just tree-sitter-test`: passed, 88 syntax/highlighting cases plus merge test; grammar did not change.
 - `litigate check lit cases`: completed with no errors; it emitted the existing L4016 `as_of` warnings for dates before today.
-- `litigate test lit/mpep`: 49 passed, 0 failed.
+- `litigate test lit/mpep`: 56 passed, 0 failed (before the seven late-petition cases: 49 passed, 0 failed).
 - Strict MPEP check: baseline 11 L5002 errors; after 0 L5002 errors, 0 other errors, 0 warnings.
 - `litigate fmt --check lit cases`: exit 2 on the known main-branch L9004 in `lit/ptab/03-trial-to-appeal.lit`; `litigate fmt --check lit/mpep`: passed.
 - `just lit-sync-check`: the first run correctly detected the just-regenerated `lit/mpep/Lit.lock` as a pending source change. The generated lock is included with this report; rerun after commit to confirm a clean tree.

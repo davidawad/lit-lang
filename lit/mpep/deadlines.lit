@@ -152,6 +152,13 @@ test "missing-parts-reply: accepted extension to the statutory ceiling" cite "37
   expect deadline(missing-parts-reply) == 2025-07-31
 }
 
+test "missing-parts-reply: a petition after the six-month ceiling does not extend the period" cite "35 U.S.C. 133"
+{
+  given MissingPartsNoticeMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-08-01
+  expect deadline(missing-parts-reply) == 2025-03-31
+}
+
 test "missing-parts-reply: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(a)"
 {
   given MissingPartsNoticeMailed() on 2025-03-06
@@ -199,6 +206,13 @@ test "election-reply: accepted extension to the statutory ceiling" cite "37 CFR 
   expect deadline(election-reply) == 2025-07-31
 }
 
+test "election-reply: a petition after the six-month ceiling does not extend the period" cite "35 U.S.C. 133"
+{
+  given RestrictionRequirementMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-08-01
+  expect deadline(election-reply) == 2025-03-31
+}
+
 test "election-reply: 2 months from Thursday, 2025-04-03" cite "37 CFR 1.7(a)"
 {
   given RestrictionRequirementMailed() on 2025-04-03
@@ -238,6 +252,13 @@ test "ssp-reply: accepted extension to the statutory ceiling from January 31" ci
   given ExtensionPetitionFiled() by applicant on 2025-07-30
   given SspReplyExtended(2025-07-31) by applicant on 2025-07-30
   expect deadline(ssp-reply) == 2025-07-31
+}
+
+test "ssp-reply: a petition after the six-month ceiling does not extend the period" cite "35 U.S.C. 133"
+{
+  given OfficeActionMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-08-01
+  expect deadline(ssp-reply) == 2025-04-30
 }
 
 test "ssp-reply: 3 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
@@ -296,6 +317,13 @@ test "extension-month: accepted cumulative extension to the 6-month statutory ce
   given ExtensionPetitionFiled() by applicant on 2025-07-30
   given ExtensionMonthExtended(2025-07-30) by applicant on 2025-07-30
   expect deadline(extension-month) == 2025-07-30
+}
+
+test "extension-month: a petition after the trigger-counted bound does not extend the period" cite "MPEP 710.01(a)"
+{
+  given ReplyPeriodEnded() on 2025-04-30
+  given ExtensionPetitionFiled() by applicant on 2025-07-31
+  expect deadline(extension-month) == 2025-05-30
 }
 
 test "extension-month: 1 month from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
@@ -379,6 +407,13 @@ test "final-reply: accepted extension to the statutory ceiling from January 31" 
   expect deadline(final-reply) == 2025-07-31
 }
 
+test "final-reply: a petition after the six-month ceiling does not extend the period" cite "35 U.S.C. 133"
+{
+  given FinalRejectionMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-08-01
+  expect deadline(final-reply) == 2025-04-30
+}
+
 test "final-reply: 3 months from Wednesday, 2025-06-04" cite "37 CFR 1.7(a)"
 {
   given FinalRejectionMailed() on 2025-06-04
@@ -410,6 +445,13 @@ test "appeal-brief: accepted 5-month extension from its 2-month due date" cite "
   given ExtensionPetitionFiled() by applicant on 2025-08-30
   given AppealBriefExtended(2025-08-31) by applicant on 2025-08-30
   expect deadline(appeal-brief) == 2025-08-31
+}
+
+test "appeal-brief: a petition after the five-month extension does not extend the period" cite "37 CFR 1.136(a); 37 CFR 41.37(e)"
+{
+  given NoticeOfAppealFiled() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-09-01
+  expect deadline(appeal-brief) == 2025-03-31
 }
 
 test "appeal-brief: 2 months from Wednesday, 2025-03-05" cite "37 CFR 1.7(a)"
@@ -445,6 +487,13 @@ test "appeal-forwarding-fee: Office grants sufficient-cause extension on timely 
   given ExtensionForCauseRequested() by applicant on 2025-05-05
   given AppealForwardingFeeExtended(2025-06-15) by office on 2025-05-06
   expect deadline(appeal-forwarding-fee) == 2025-06-15
+}
+
+test "appeal-forwarding-fee: a request after the due date does not extend the period" cite "37 CFR 1.136(b); 37 CFR 41.45(c)"
+{
+  given ExaminersAnswerMailed() on 2025-03-31
+  given ExtensionForCauseRequested() by applicant on 2025-06-01
+  expect deadline(appeal-forwarding-fee) == 2025-06-02
 }
 
 test "appeal-forwarding-fee: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(a)"

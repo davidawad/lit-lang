@@ -1935,3 +1935,10 @@ FRBP 8002. Neither decision supports a proposition needed by this outline.
 - Retrieved 2026-11-03. Method: `curl -L` from GovInfo; extracted with `pdftotext -layout` (unmodified).
 - Original PDF sha256 `bce0d1975ed4eafda1dc82a6528da5a9fbe8065583f3291d92ef05c74a9990f8`; extraction sha256 `cec09c3e96116c999e3c50def40da98a7770b6f28a320e1b1911bfc6d7e28f78`. Original: `federal-register/original/executive-order-14133.pdf`.
 - The order closes executive departments and agencies and §3 addresses federal pay and leave; it does not direct courts to treat the date as a legal holiday. Court-specific counting declarations are modeled only where an order expressly makes that declaration.
+
+
+### `rcfc-2010-time.txt` — RCFC 6 as amended through January 11, 2010
+
+- Source: the Court of Federal Claims' official Rules PDF, amended through January 11, 2010, https://www.uscfc.uscourts.gov/sites/cfc/files/rcfc_complete_20100111.pdf. The relevant Rule 6(b)(1)-(2) text is transcribed from pages 15-16; it authorizes extensions for good cause and identifies the exceptions.
+- Original: `original/rcfc-2010/rcfc_complete_20100111.pdf` (sha256 `5cbd4d4d5ee96991ce12c23f2eabe05f490f107e485bba94d8330af77b9c48ae`).
+- sha256 (extraction): `04d035a4dae6401c18abe332a548c51fc1f1102d98c0f66122396ac1f5af52df`.

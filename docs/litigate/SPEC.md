@@ -2850,7 +2850,8 @@ package is judged in full. A dependency package is judged only for
 declarations reachable from the named package's declarations, following
 resolved references transitively. The closure walks declarations with and
 without `Metadata` (including events, enums, and type aliases), so a reference
-through a type or event declaration does not stop the search. Inline `test`
+through a type or event declaration does not stop the search. All versions of
+a declaration id contribute references to the closure. Inline `test`
 declarations are excluded: they assert behavior about rules, so a rule does
 not depend on the test that exercises it. Reachability includes imports actually
 used, declaration references (including a deadline's counting rule and a

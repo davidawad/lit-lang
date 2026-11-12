@@ -277,8 +277,8 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
         .filter(|p| p.requested)
         .filter_map(|p| p.check.package.as_ref())
         .collect();
-    // Serialize each declaration once. The string-leaf index lets the
-    // transitive walk resolve a reference without rescanning the HIR.
+    // Serialize declarations once. Versions sharing a qualified id contribute
+    // the union of their references to the transitive walk.
     let mut declaration_refs: BTreeMap<String, (String, BTreeSet<String>)> = BTreeMap::new();
     let mut local_ids: BTreeMap<(String, String), String> = BTreeMap::new();
     for (package_name, package) in &packages {
@@ -292,7 +292,10 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
                 string_leaves(&value, &mut refs);
             }
             local_ids.insert(((*package_name).to_owned(), id.to_owned()), key.clone());
-            declaration_refs.insert(key, ((*package_name).to_owned(), refs));
+            declaration_refs
+                .entry(key)
+                .and_modify(|(_, existing)| existing.extend(refs.iter().cloned()))
+                .or_insert_with(|| ((*package_name).to_owned(), refs));
         }
     }
     let mut reachable = BTreeSet::new();

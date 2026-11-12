@@ -34,6 +34,17 @@ event MandateFiled()
 /// exceed 6,500 words, a reply 2,500 words; handwritten filings 25 and 10
 /// pages (LR Civ. 7(e)).
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 7(b)"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
+
 /// LR Civ. 7(b), 56(b): responses to motions for summary judgment are filed
 /// within 21 days of service of the motion.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 56(b)"

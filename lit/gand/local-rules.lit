@@ -55,6 +55,17 @@ test "Counting boundary: motion-filing-period (weekend)" cite "N.D. Ga. LR 7.1(A
 /// opposition. Briefs in support of or in response to a motion are limited
 /// to 25 pages absent prior permission (LR 7.1(D)).
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(B)"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
+
 /// LR 7.1(B): the response to a motion for summary judgment is served 21
 /// days after service of the motion.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(B)"

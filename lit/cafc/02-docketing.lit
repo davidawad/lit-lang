@@ -58,12 +58,12 @@ state docketing-statement-filed: "Docketing Statement Filed" by court cite "Fed.
 
 /// Fed. Cir. R. 47.3(b)(1): counsel retained before docketing must enter an
 /// appearance within 14 days after the court dockets the case; the
-/// certificate of interest is filed with it (Fed. Cir. R. 47.4(b)). Fed.
-/// Cir. R. 26(b)(4) says, "In addition to showing good cause, the motion
-/// must state: (A) the date to be extended; (B) the revised date sought;
-/// (C) the number of days of extension sought; and (D) the total number of
-/// days of extension previously granted to the movant"
-/// (`sources/fedcir-2018-rule26.txt:2`).
+/// certificate of interest is filed with it (Fed. Cir. R. 47.4(b)). Current
+/// Fed. Cir. R. 26(b)(1) requires a motion at least seven days before the
+/// date sought, except that in extraordinary circumstances it may be made
+/// later (`sources/fedcir-rules.txt:4675`). Rule 26(b)(3) requires a showing
+/// of good cause for requests over 14 days (`:4711`). FRAP 26(b) authorizes
+/// extensions for good cause, including after expiry (`:4573`).
 rule duty entry-of-appearance cite "Fed. Cir. R. 47.3(b)(1)"
 {
   deadline appearance-period: 14.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b)"

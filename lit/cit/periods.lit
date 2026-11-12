@@ -109,21 +109,10 @@ event DocketEntryWithoutSeparateDocument()
 /// 28 U.S.C. § 2412(d)(2)(G) (USCIT R. 54.1(a)).
 event FinalJudgment()
 
-/// In a § 1581(c) action contesting a determination listed in section
-/// 516A(a)(2) or (3) of the Tariff Act of 1930, the action is commenced by
-/// "A summons, and within 30 days thereafter a complaint".
+/// USCIT R. 3(a)(2) restates the statutory 30-day period in 19 U.S.C.
+/// § 1516a(a)(2)(A), as the vendored Rule 3 practice comment confirms. Rule
+/// 6(b) does not on its face enlarge this statutory deadline.
 deadline complaint-after-summons-period: 30.days after SummonsFiled() counted_by uscit6 cite "USCIT R. 3(a)(2)"
-{
-  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
-  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
-  extend {
-    by court
-    discretion ExcusableNeglect
-    after_expiry
-    on ExtensionMotionFiled()
-    cite "USCIT R. 6(b)(1)(B)"
-  }
-}
 
 test "Counting boundary: complaint-after-summons-period (weekend)" cite "USCIT R. 3(a)(2)"
 {

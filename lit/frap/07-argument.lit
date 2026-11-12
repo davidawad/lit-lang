@@ -53,29 +53,62 @@ chance de-novo-review: "De Novo Review (Questions of Law)" by court discretion c
 {
   group argument-group
   note "No deference to the district court's legal conclusions — decided fresh. Includes summary judgment grants, dismissals, statutory interpretation. Highest reversal rate of the three standards. (The blueprint's garbled cite, Salve Regina Dockery Co. v. Russell, is Salve Regina College v. Russell, 499 U.S. 225 (1991), cited above.)"
-  "Panel affirms de novo" -> affirmed p 0.45
-  "Panel reverses de novo" -> reversed p 0.15
-  "Panel reverses and remands" -> reversed-and-remanded p 0.25
-  "Panel vacates and remands" -> vacated-and-remanded p 0.1
-  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
+  "Panel affirms de novo" -> affirmed p 0.45 {
+    sets [panel-affirmed]
+    clears [panel-reversed, panel-reversed-and-remanded]
+  }
+  "Panel reverses de novo" -> reversed p 0.15 {
+    sets [panel-reversed]
+    clears [panel-affirmed, panel-reversed-and-remanded]
+  }
+  "Panel reverses and remands" -> reversed-and-remanded p 0.25 {
+    sets [panel-reversed-and-remanded]
+    clears [panel-affirmed, panel-reversed]
+  }
+  "Panel vacates and remands" -> vacated-and-remanded p 0.1 {
+    clears [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
+  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05 {
+    clears [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
 }
 
 chance abuse-of-discretion-review: "Abuse-of-Discretion Review (Discretionary Rulings)" by court discretion cite "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
 {
   group argument-group
   note "Governs evidentiary rulings, discovery orders, sanctions, case management. Reversed only for wrong legal standard, clearly erroneous facts, or a decision no reasonable judge could reach."
-  "No abuse found — panel affirms" -> affirmed p 0.7
-  "Abuse found — panel reverses" -> reversed p 0.1
-  "Panel vacates for further findings" -> vacated-and-remanded p 0.15
-  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
+  "No abuse found — panel affirms" -> affirmed p 0.7 {
+    sets [panel-affirmed]
+    clears [panel-reversed, panel-reversed-and-remanded]
+  }
+  "Abuse found — panel reverses" -> reversed p 0.1 {
+    sets [panel-reversed]
+    clears [panel-affirmed, panel-reversed-and-remanded]
+  }
+  "Panel vacates for further findings" -> vacated-and-remanded p 0.15 {
+    clears [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
+  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05 {
+    clears [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
 }
 
 chance clear-error-review: "Clear-Error Review (Factual Findings)" by court discretion cite "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
 {
   group argument-group
   note "Most deferential standard — reversal requires a 'definite and firm conviction that a mistake has been committed,' even if the panel would have decided differently. Especially deferential to credibility findings."
-  "No clear error — panel affirms" -> affirmed p 0.75
-  "Clear error found — reverses" -> reversed p 0.08
-  "Panel vacates for further findings" -> vacated-and-remanded p 0.12
-  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
+  "No clear error — panel affirms" -> affirmed p 0.75 {
+    sets [panel-affirmed]
+    clears [panel-reversed, panel-reversed-and-remanded]
+  }
+  "Clear error found — reverses" -> reversed p 0.08 {
+    sets [panel-reversed]
+    clears [panel-affirmed, panel-reversed-and-remanded]
+  }
+  "Panel vacates for further findings" -> vacated-and-remanded p 0.12 {
+    clears [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
+  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05 {
+    clears [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
 }

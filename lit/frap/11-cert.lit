@@ -107,19 +107,58 @@ decision cert-petition-window: "Certiorari Petition Window" by movant cite "Sup.
     duration { min 13.5.days, mode 45.days, max 90.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
+  "90-day window lapses" -> cert-not-sought-after-affirmance {
+    authority cite "Sup. Ct. R. 13.1"
+    effort 0.hours
+    requires [panel-affirmed]
+    forbids [panel-reversed, panel-reversed-and-remanded]
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  "90-day window lapses" -> cert-not-sought-after-reversal {
+    authority cite "Sup. Ct. R. 13.1"
+    effort 0.hours
+    requires [panel-reversed]
+    forbids [panel-affirmed, panel-reversed-and-remanded]
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  "90-day window lapses" -> cert-not-sought-after-reversal {
+    authority cite "Sup. Ct. R. 13.1"
+    effort 0.hours
+    requires [panel-reversed-and-remanded]
+    forbids [panel-affirmed, panel-reversed]
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
   "90-day window lapses" -> cert-not-sought {
     authority cite "Sup. Ct. R. 13.1"
     effort 0.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    forbids [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
   }
 }
 
 terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite "Sup. Ct. R. 13.1"
 {
   group cert-group
-  note "The vast majority of court of appeals decisions end here — no petition filed, judgment final and unreviewable by any federal court. PLACEHOLDER PAYOFF: $400,000, override per matter. Blended for the same reason as `rehearing-en-banc-both-denied`: the panel's disposition, whatever it was, simply stands."
+  note "The vast majority of court of appeals decisions end here — no petition filed, judgment final and unreviewable by any federal court. Neutral copy: no directional panel result flag is set. PLACEHOLDER PAYOFF: $400,000, override per matter."
   valence good
   payoff 400_000.usd
+}
+
+terminal cert-not-sought-after-affirmance: "FINAL — Certiorari Not Sought After Affirmance" outcome [final, loss] cite "Sup. Ct. R. 13.1"
+{
+  group cert-group
+  note "No certiorari petition was filed, so the affirmance stands. PLACEHOLDER PAYOFF: $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
+  valence bad
+  payoff 0.usd
+}
+
+terminal cert-not-sought-after-reversal: "FINAL — Certiorari Not Sought After Reversal" outcome [final, win] cite "Sup. Ct. R. 13.1"
+{
+  group cert-group
+  note "No certiorari petition was filed, so the reversal stands. PLACEHOLDER PAYOFF: $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
+  valence good
+  payoff 0.usd
+  payoff_by_flag { panel-reversed: 1_000_000.usd, panel-reversed-and-remanded: 600_000.usd }
 }
 
 state cert-petition-filed: "Petition for Certiorari Filed" by court cite "Sup. Ct. R. 10; 28 U.S.C. § 1254(1)"
@@ -133,18 +172,69 @@ chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by cour
 {
   group cert-group
   note "The Supreme Court grants certiorari to only about 1% of petitions. Most petitions receive zero substantive review; the Court's denial is typically summary and involves only a screening review by law clerks. No opinions are issued on the merits of denied petitions."
-  "Certiorari denied" -> cert-denied p 0.99 { authority cite "Sup. Ct. R. 10" }
+  "Certiorari denied" -> cert-denied-after-affirmance p 0.99 {
+    authority cite "Sup. Ct. R. 10"
+    requires [panel-affirmed]
+    forbids [panel-reversed, panel-reversed-and-remanded]
+  }
+  "Certiorari denied" -> cert-denied-after-reversal p 0.99 {
+    authority cite "Sup. Ct. R. 10"
+    requires [panel-reversed]
+    forbids [panel-affirmed, panel-reversed-and-remanded]
+  }
+  "Certiorari denied" -> cert-denied-after-reversal p 0.99 {
+    authority cite "Sup. Ct. R. 10"
+    requires [panel-reversed-and-remanded]
+    forbids [panel-affirmed, panel-reversed]
+  }
+  "Certiorari denied" -> cert-denied p 0.99 {
+    authority cite "Sup. Ct. R. 10"
+    forbids [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
+  }
   "Certiorari granted" -> cert-granted p 0.01 {
     authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
+    requires [panel-affirmed]
+    forbids [panel-reversed, panel-reversed-and-remanded]
+  }
+  "Certiorari granted" -> cert-granted p 0.01 {
+    authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
+    requires [panel-reversed]
+    forbids [panel-affirmed, panel-reversed-and-remanded]
+  }
+  "Certiorari granted" -> cert-granted p 0.01 {
+    authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
+    requires [panel-reversed-and-remanded]
+    forbids [panel-affirmed, panel-reversed]
+  }
+  "Certiorari granted" -> cert-granted p 0.01 {
+    authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
+    forbids [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
   }
 }
 
 terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite "Sup. Ct. R. 10"
 {
   group cert-group
-  note "A denial of certiorari is not a ruling on the merits and carries zero precedential weight — parties cannot cite a cert denial as support for any legal proposition, and the denial expresses no view on the correctness of the lower court's decision. PLACEHOLDER PAYOFF: $400,000, override per matter. Blended for the same reason as `rehearing-en-banc-both-denied`: the panel's disposition, whatever it was, simply stands."
+  note "A denial of certiorari is not a ruling on the merits and carries zero precedential weight — parties cannot cite a cert denial as support for any legal proposition, and the denial expresses no view on the correctness of the lower court's decision. Neutral copy: no directional panel result flag is set. PLACEHOLDER PAYOFF: $400,000, override per matter."
   valence good
   payoff 400_000.usd
+}
+
+terminal cert-denied-after-affirmance: "CERT DENIED After Affirmance (Final)" outcome [final, loss] cite "Sup. Ct. R. 10"
+{
+  group cert-group
+  note "Certiorari denial leaves the affirmance standing. PLACEHOLDER PAYOFF: $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
+  valence bad
+  payoff 0.usd
+}
+
+terminal cert-denied-after-reversal: "CERT DENIED After Reversal (Final)" outcome [final, win] cite "Sup. Ct. R. 10"
+{
+  group cert-group
+  note "Certiorari denial leaves the reversal standing. PLACEHOLDER PAYOFF: $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
+  valence good
+  payoff 0.usd
+  payoff_by_flag { panel-reversed: 1_000_000.usd, panel-reversed-and-remanded: 600_000.usd }
 }
 
 terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" outcome [pending] cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"

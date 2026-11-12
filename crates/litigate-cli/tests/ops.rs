@@ -5,6 +5,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
+use litigate_engine::model::{CompileOptions, Graph, LinkFile};
 use serde_json::{json, Value};
 use support::{example, litigate, litigate_in, scratch, Run};
 
@@ -82,6 +83,116 @@ fn frcp_civil_case_solve_uses_party_relative_judgment_stakes() {
             "[win] terminal {terminal} has no preceding merits edge: {line:?}"
         );
     }
+}
+
+#[test]
+fn frap_blended_terminals_follow_the_panel_result_flags() {
+    let catalog = litgraph_packs::catalog().unwrap();
+    let pack = catalog
+        .packs
+        .iter()
+        .find(|(_, pack, _)| pack.id == "frap-appellate-procedure")
+        .unwrap()
+        .1
+        .clone();
+    assert_eq!(
+        pack.nodes
+            .iter()
+            .find(|node| node.id == "rehearing-en-banc-both-denied")
+            .unwrap()
+            .payoff,
+        Some(400_000.0)
+    );
+    let graph = Graph::compile(&[pack], &LinkFile::default(), &CompileOptions::default()).unwrap();
+
+    let cases = [
+        (
+            "rehearing-en-banc-both-denied",
+            "rehearing-en-banc-both-denied-after-affirmance",
+            "rehearing-en-banc-both-denied-after-reversal",
+        ),
+        (
+            "cert-not-sought",
+            "cert-not-sought-after-affirmance",
+            "cert-not-sought-after-reversal",
+        ),
+        (
+            "cert-denied",
+            "cert-denied-after-affirmance",
+            "cert-denied-after-reversal",
+        ),
+    ];
+    for (neutral_id, adverse_id, favourable_id) in cases {
+        assert_frap_split(&graph, neutral_id, adverse_id, favourable_id);
+    }
+}
+
+fn assert_frap_split(graph: &Graph, neutral_id: &str, adverse_id: &str, favourable_id: &str) {
+    let reachable = reachable_nodes(graph);
+    let neutral = graph
+        .node(&format!("frap-appellate-procedure::{neutral_id}"))
+        .unwrap();
+    let adverse = graph
+        .node(&format!(
+            "frap-appellate-procedure::{adverse_id}{{panel-affirmed}}"
+        ))
+        .unwrap();
+    let reversed = graph
+        .node(&format!(
+            "frap-appellate-procedure::{favourable_id}{{panel-reversed}}"
+        ))
+        .unwrap();
+    let remanded = graph
+        .node(&format!(
+            "frap-appellate-procedure::{favourable_id}{{panel-reversed-and-remanded}}"
+        ))
+        .unwrap();
+    for node in [neutral, adverse, reversed, remanded] {
+        assert!(
+            reachable[node],
+            "split copy is unreachable: {}",
+            graph.nodes[node].id
+        );
+    }
+    assert_eq!(
+        graph.nodes[neutral].id,
+        format!("frap-appellate-procedure::{neutral_id}")
+    );
+    assert!(graph.nodes[neutral].flags.is_empty());
+    let ends = [
+        terminal_copy(graph, neutral),
+        terminal_copy(graph, adverse),
+        terminal_copy(graph, reversed),
+        terminal_copy(graph, remanded),
+    ];
+    assert_eq!(graph.nodes[ends[0]].payoff, 400_000.0);
+    assert!(graph.nodes[ends[0]].outcome.contains(&"final".to_owned()));
+    assert_eq!(graph.nodes[ends[1]].payoff, 0.0);
+    assert!(graph.nodes[ends[1]].outcome.contains(&"loss".to_owned()));
+    assert_eq!(graph.nodes[ends[2]].payoff, 1_000_000.0);
+    assert!(graph.nodes[ends[2]].outcome.contains(&"win".to_owned()));
+    assert_eq!(graph.nodes[ends[3]].payoff, 600_000.0);
+    assert!(graph.nodes[ends[3]].outcome.contains(&"win".to_owned()));
+}
+
+fn reachable_nodes(graph: &Graph) -> Vec<bool> {
+    let mut seen = vec![false; graph.nodes.len()];
+    let mut queue = std::collections::VecDeque::from([graph.start]);
+    while let Some(node) = queue.pop_front() {
+        if seen[node] {
+            continue;
+        }
+        seen[node] = true;
+        queue.extend(graph.out[node].iter().map(|edge| graph.edges[*edge].to));
+    }
+    seen
+}
+
+fn terminal_copy(graph: &Graph, node: usize) -> usize {
+    graph.out[node]
+        .iter()
+        .find(|edge| graph.edges[**edge].synthetic)
+        .map_or(node, |edge| graph.edges[*edge].to)
 }
 
 #[test]

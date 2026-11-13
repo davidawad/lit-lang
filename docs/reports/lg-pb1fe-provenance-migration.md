@@ -77,3 +77,21 @@ Thus no probability, payoff, duration, cost, effort, cite, rule fact, or edge mo
 - `cargo build --release -p litigate-cli`: exit 0.
 - `just lit-sync-check`: exit 0; `Lit.lock` files and the shared clock library are current, no generated file committed.
 - `litigate lint` on the 9 touched packages: exit 0; 0 errors, 199 warnings (193 L9012 and 6 L9002).
+
+## lg-pb1fe.59
+
+DECIDED: Allow only L9012 warnings in the legal-change example test and pin the measured count at 14 -- lg-pb1fe.57 intentionally typed uncertain numeric values as estimates without inventing vintages, so the warnings are expected; pinning the count makes any additional unvintaged value an explicit test change.
+
+Step 0 baseline: `origin/main` was `6ebc2f114a9812f02cf542d4ddb5680c17f664e6`. `litigate check docs/litigate/examples/change --format json` (release binary) exited 0 with 20 diagnostics: L9002 warning 6 and L9012 warning 14. There were no other (code, severity) pairs. The 14 L9012 locations were:
+
+- `lit/mpep/02-filing-to-allowance.lit`: 708, 747, 822, 836, 850, 864, 878, 892, 906
+- `lit/mpep/03-post-grant.lit`: 253, 261, 270
+- `lit/mpep/04-reissue.lit`: 25, 33
+
+The initial `every_example_layer_and_world_checks` run failed because L9012 warning was not allowed. The test now explicitly allows only warning severity for L9012 and asserts exactly 14 such diagnostics. The remaining assertion conditions are unchanged. The other `L9002` matches in `crates/*/tests` are focused assertions/snapshots, not allowed-warning sets spanning the migrated packages; no other test required an L9012 allowance.
+
+Against the requested 30d2114ec comparison, the old tree was checked using the current release binary and reports L1007 lock mismatches because its compiler is newer than that tree. Its six L9002 warnings match the current run; current diagnostics have no errors or codes beyond those L9002 warnings and the expected L9012 warnings. Thus the L1007 entries are a comparison-tool version artifact, not new diagnostics to fix in this bead.
+
+Targeted tests: `cargo test -p litigate-cli --test change_examples -- --nocapture` exited 0 (3 passed); `cargo test -p litigate-cli --test change_files -- --nocapture` exited 0 (5 passed). Tests changed: `crates/litigate-cli/tests/change_examples.rs` only.
+
+Step 3 gates: `cargo nextest run -p litigate-cli --no-fail-fast` exited 0 (669 passed, 0 failed, 0 skipped; 14 slow; no FAILED names). `cargo clippy -p litigate-cli --all-targets -- -D warnings` exited 0. `cargo fmt --all --check` exited 0.

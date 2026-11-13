@@ -17,11 +17,18 @@ fn every_example_layer_and_world_checks() {
     assert_eq!(run.code, 0, "{}", run.stdout);
     // Only the corpus's own history notes: no error, no other warning.
     let found = codes(&run.json);
+    let l9012_warnings = found
+        .iter()
+        .filter(|(code, severity)| code == "L9012" && severity == "warning")
+        .count();
+    // lg-pb1fe.57 intentionally typed uncertain numbers without inventing vintages.
+    assert_eq!(l9012_warnings, 14);
     assert!(
         found.iter().all(|(code, severity)| severity != "error"
             && (severity == "info"
                 || code == "L9002"
                 || code == "L1010"
+                || (code == "L9012" && severity == "warning")
                 || (code == "L9011" && severity == "warning"))),
         "{found:?}"
     );

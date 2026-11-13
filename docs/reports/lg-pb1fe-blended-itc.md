@@ -1,6 +1,6 @@
 # ITC blended-terminal follow-up (lg-pb1fe.53)
 
-DECIDED: ITC has no neutral copy because no unflagged or mixed-result state can reach either appellate decision; remove the two neutral terminals and keep the strict checker unchanged, as David ruled.
+DECIDED: ITC has no neutral copy because no unflagged or mixed-result state can reach either appellate decision; remove the two neutral terminals and keep the strict checker unchanged, as the PM ruled on lg-pb1fe.53.
 
 ## Baseline and result
 

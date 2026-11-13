@@ -1,4 +1,3 @@
-
 /// Parsed `Lit.lock`.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]

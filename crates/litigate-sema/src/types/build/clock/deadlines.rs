@@ -206,5 +206,4 @@ impl Cx<'_, '_> {
             end_of_month,
         })
     }
-
 }

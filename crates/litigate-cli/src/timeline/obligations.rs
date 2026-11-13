@@ -1,4 +1,3 @@
-
 /// How an obligation instance's end reads as a row status; `trigger` is
 /// the name of the event that created it.
 fn obligation_status(

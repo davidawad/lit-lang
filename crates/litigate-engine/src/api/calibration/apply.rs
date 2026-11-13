@@ -65,25 +65,35 @@ pub fn apply(g: &mut Graph, set: &CalibrationSet) -> Application {
     let mut skipped = 0usize;
     for e in &set.entries {
         let hit = match e.target {
-            CalibrationTarget::EdgeProbability => match g.edge(&e.target_ref) {
-                Ok(ix) => {
-                    for i in g.edge_family(ix) {
+            CalibrationTarget::EdgeProbability => {
+                let family = g.edge(&e.target_ref).map_or_else(
+                    |_| g.edge_family_by_base_id(&e.target_ref),
+                    |ix| g.edge_family(ix),
+                );
+                if family.is_empty() {
+                    false
+                } else {
+                    for i in family {
                         g.edges[i].probability = e.value;
                         g.sample_size.insert(i, (set.id.clone(), e.n));
                     }
                     true
                 }
-                Err(_) => false,
-            },
-            CalibrationTarget::EdgeDuration => match g.edge(&e.target_ref) {
-                Ok(ix) => {
-                    for i in g.edge_family(ix) {
+            }
+            CalibrationTarget::EdgeDuration => {
+                let family = g.edge(&e.target_ref).map_or_else(
+                    |_| g.edge_family_by_base_id(&e.target_ref),
+                    |ix| g.edge_family(ix),
+                );
+                if family.is_empty() {
+                    false
+                } else {
+                    for i in family {
                         g.edges[i].duration.clone_from(&e.distribution);
                     }
                     true
                 }
-                Err(_) => false,
-            },
+            }
             CalibrationTarget::NodeAttr => match g.node(&e.target_ref) {
                 Ok(ix) => {
                     if let (Some(attr), Some(v)) = (&e.attr, e.value) {
@@ -214,6 +224,49 @@ mod tests {
         let app = apply(&mut g, &set);
         assert_eq!(app.applied.len(), 0);
         assert_eq!(app.skipped, 1);
+    }
+
+    #[test]
+    fn base_id_calibration_reaches_flagged_only_edge_copies() {
+        let pack = Pack::from_json(
+            r#"{
+                "schemaVersion":2,"id":"demo","title":"Demo","startNodeId":"start",
+                "nodes":[
+                    {"id":"start","label":"Start"},
+                    {"id":"middle","label":"Middle"},
+                    {"id":"end","label":"End","kind":"terminal"}
+                ],
+                "edges":[
+                    {"id":"set-ready","from":"start","to":"middle","label":"Set","sets":["ready"]},
+                    {"id":"flagged-only","from":"middle","to":"end","label":"Flagged","requires":["ready"]}
+                ]
+            }"#,
+        )
+        .unwrap();
+        let mut g = Graph::compile(&[pack], &LinkFile::default(), &CompileOptions::default())
+            .expect("flagged edge pack compiles");
+        assert!(g.edge("demo::flagged-only").is_err());
+        let family = g.edge_family_by_base_id("demo::flagged-only");
+        assert!(!family.is_empty(), "the edge exists in a flagged state");
+        assert!(family
+            .iter()
+            .all(|&ix| g.edges[ix].id.starts_with("demo::flagged-only{")));
+
+        let set = CalibrationSet::from_json(
+            r#"{"id":"x","title":"x","entries":[
+                {"target":"edge-duration","ref":"demo::flagged-only","distribution":{"mode":9.0},"source":{"title":"t","url":"https://example.com","vintageStart":"2024-01-01"},"n":1},
+                {"target":"edge-probability","ref":"demo::flagged-only","value":0.7,"source":{"title":"t","url":"https://example.com","vintageStart":"2024-01-01"},"n":1},
+                {"target":"edge-duration","ref":"demo::missing","distribution":{"mode":9.0},"source":{"title":"t","url":"https://example.com","vintageStart":"2024-01-01"},"n":1}
+            ]}"#,
+        )
+        .unwrap();
+        let app = apply(&mut g, &set);
+        assert_eq!(app.applied.len(), 2);
+        assert_eq!(app.skipped, 1);
+        for ix in family {
+            assert_eq!(g.edges[ix].duration.as_ref().unwrap().mode, 9.0);
+            assert_eq!(g.edges[ix].probability, Some(0.7));
+        }
     }
 
     #[test]

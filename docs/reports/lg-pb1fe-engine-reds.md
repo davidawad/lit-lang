@@ -1,8 +1,8 @@
 # lg-pb1fe.58 — engine red fixes
 
-`origin/main` was `6ebc2f11` at Step 0; `30d2114ec` is an ancestor. The initial `cargo nextest run -p litigate-engine --no-fail-fast` result was 648 passed, 1 skipped, 1 failed: `calibration::every_embedded_calibration_entry_resolves`. The source provenance test passed after the six provenance records were repaired.
+`origin/main` was `31d7666fb3f236a33cdd400219d3957fad15db54` at Step 0; `30d2114ec` is an ancestor. Rebased the previous attempt onto this commit, resolving `lit/frcp/Lit.lock` by taking upstream's row and regenerating it from source. The initial `cargo nextest run -p litigate-engine --no-fail-fast` result on the previous attempt was 648 passed, 1 skipped, 1 failed: `calibration::every_embedded_calibration_entry_resolves`. The source provenance test passed after the six provenance records were repaired.
 
-DECIDED: Associate the defendant summary-judgment duration proxy with `edge-sj-briefing-complete-sj-ruling` -- the authored calibration describes the summary-judgment ruling, and this is the common compiled transition to that ruling; compiled defendant outcome edges carry state flags and do not have an unflagged ID.
+DECIDED: Preserve the authored defendant summary-judgment edge reference and resolve calibration refs by base edge id -- the calibration describes that outcome, while the compiled graph retains it only as state-flag copies.
 
 ## Source provenance
 
@@ -21,7 +21,7 @@ For the three eCFR histories, provenance records the API URL, retrieval date, as
 
 ## Calibration
 
-The skipped `frcp-fy2024` entry named `frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-defendant`. The compiled graph has the defendant edges `frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-defendant{sj-by-defendant}` and `frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-defendant{sj-by-defendant,waived-12h-defenses}`; it has no unflagged edge with the authored reference. The other candidate transition into the ruling is `frcp-civil-procedure::edge-sj-briefing-complete-sj-ruling`. The calibration reference was changed to that common transition because its method describes the full-case summary-judgment ruling proxy and the base outcome edges are flag-specialized. No number, sample size, source, or method sentence changed.
+The skipped `frcp-fy2024` entry named `frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-defendant`. The compiled graph has the defendant edges `frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-defendant{sj-by-defendant}` and `frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-defendant{sj-by-defendant,waived-12h-defenses}`; it has no unflagged edge with the authored reference. `Graph::edge_family_by_base_id` now resolves those copies when the exact unflagged id is absent. The same lookup applies to duration and probability calibration; an id with no copies remains skipped. The `.lit` and JSON fixture retain the original defendant edge ref. No number, sample size, source, or method sentence changed, and no solve-value fixture moved.
 
 The matching `crates/litigate-cli/tests/litgraph-final/calibration/frcp-fy2024.json` fixture was updated in the fourth entry's `ref` field only. Numeric fields (`mode: 410.91`, `n: 21861`) and every other field are unchanged; therefore no solve-value fixture moved.
 
@@ -31,4 +31,12 @@ The matching `crates/litigate-cli/tests/litgraph-final/calibration/frcp-fy2024.j
 
 ## Checks
 
-Results are recorded here after all required commands have completed.
+- `cargo nextest run -p litigate-engine --no-fail-fast`: exit 0, 650 passed, 1 skipped. Includes `calibration::every_embedded_calibration_entry_resolves`, `source_provenance::every_vendored_text_has_its_sha256_recorded`, and `base_id_calibration_reaches_flagged_only_edge_copies`.
+- `just lit-sync`: exit 0; `just lit-sync-check`: exit 0, `Lit.lock` files and shared clock current, no generated file committed. The upstream FRCP lock row already matched the restored source reference, so regeneration produced no `Lit.lock` diff.
+- `cargo nextest run -p litigate-engine -p litigate-cli --no-fail-fast`: exit 0, 1,319 passed, 1 skipped, no failures (18 slow tests).
+- `cargo clippy --workspace --all-targets -- -D warnings`: exit 0 after applying the lint suggestions in `api/calibration/apply.rs`.
+- `cargo fmt --all --check`: exit 0.
+- `cargo build --release -p litigate-cli`: exit 0, finished in 8m03s.
+- `target/release/litigate check lit cases`: exit 0, `ok: true`, no errors.
+- `target/release/litigate test lit/frcp`: exit 0, 51 passed, 0 failed.
+- `cargo nextest run -p litigate-base --test line_ceiling`: exit 0, 3 passed, 0 skipped.

@@ -133,6 +133,15 @@ impl Graph {
             .collect()
     }
 
+    /// Every flagged copy of an edge identified by its pack-level id, even
+    /// when the unflagged edge itself is absent from the product graph.
+    #[must_use]
+    pub fn edge_family_by_base_id(&self, base_id: &str) -> Vec<EdgeIx> {
+        (0..self.edges.len())
+            .filter(|&i| self.edges[i].base_id == base_id)
+            .collect()
+    }
+
     /// Role of an edge from its pack's role table (links use the source
     /// node's pack). Scenario perspective overrides are applied by `View`.
     #[must_use]

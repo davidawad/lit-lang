@@ -178,6 +178,15 @@ Gate results:
 - `cargo fmt --all -- --check`: exit 0.
 - `cargo clippy --workspace --all-targets -- -D warnings`: exit 0.
 - `cargo nextest run -p litigate-base --test line_ceiling`: 3 passed, 0 failed.
-- The end-of-workspace-set run of `cargo nextest run -p litigate-cli -p litigate-lsp -p litigate-verify -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-engine`: 2446 tests, 2444 passed, 2 failed, 1 skipped (exit 100). The failures reproduce in isolation and are unrelated to the refactor: `every_embedded_calibration_entry_resolves` reports 1 unresolved entry in `frcp-fy2024.json`; `every_vendored_text_has_its_sha256_recorded` reports six source text files without current hashes in provenance. The affected refactor tests passed in that run. The post-fetch rerun for the four touched crates is recorded below when complete.
+- The end-of-workspace-set run recorded before the retry checkpoint was `cargo nextest run -p litigate-cli -p litigate-lsp -p litigate-verify -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-engine`: 2446 tests, 2444 passed, 2 failed, 1 skipped (exit 100). The failures reproduce in isolation and are unrelated to the refactor: `every_embedded_calibration_entry_resolves` reports 1 unresolved entry in `frcp-fy2024.json`; `every_vendored_text_has_its_sha256_recorded` reports six source text files without current hashes in provenance.
 
-The final pre-finish fetch returned `30d2114e`; rebase reported the branch already up to date. The ratchet test passed after rebase. The list remains at 60 over-limit files; no other branch growth was present on the fetched base.
+## Retry finish verification
+
+The final fetch advanced `origin/main` from `30d2114e` to `6ebc2f11`; the branch was rebased onto it. This base includes the parallel provenance migration (`c3aae65c`) and a formatting-only CLI inventory change. After rebase:
+
+- `cargo nextest run -p litigate-base --test line_ceiling`: 3 passed, 0 failed (exit 0).
+- `cargo nextest run -p litigate-cli -p litigate-sema -p litigate-verify -p litigate-base`: 1504 tests, 1503 passed, 1 failed, 0 skipped (exit 100). The failure is `litigate-cli::change_examples::every_example_layer_and_world_checks`, which now sees L9002/L9012 warning diagnostics. The same four-crate run passed 1504/1504 on base `30d2114e` before the final fetch; the warning assertion is outside this bead and appeared with the newer corpus base.
+- `cargo fmt --all --check`: exit 0.
+- `cargo clippy --workspace --all-targets -- -D warnings`: exit 0.
+- The two previously identified `litigate-engine` failures (`every_embedded_calibration_entry_resolves` and `every_vendored_text_has_its_sha256_recorded`) were not rerun; they were reported as pre-existing on `30d2114e` by the PM and are unrelated to this bead.
+- The after-list remains 60 over-limit files; the rebase adds no over-limit source file. The ratchet test passed after rebase.

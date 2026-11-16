@@ -575,13 +575,16 @@ gate_start=$SECONDS
 selected_stages=""
 plan_stages=0
 
-# A warm build (lg-kuei): compile through sccache when the pod has one and
-# no wrapper is set, so a gate does not compile the workspace cold. Its
-# cache keys every crate by its inputs, Cargo.lock's pinned sources among
-# them.
+# A warm build (lg-kuei): compile through kache when it is available and no
+# wrapper is set. The pod wrapper remains authoritative; no cache tool means
+# a normal uncached build. sccache is an explicit opt-back via the caller's
+# RUSTC_WRAPPER.
 warm_build() {
-  if [ -z "${RUSTC_WRAPPER:-}" ] && command -v sccache > /dev/null; then
-    export RUSTC_WRAPPER=sccache
+  if [ -z "${RUSTC_WRAPPER:-}" ] && [ -z "${CARGO_BUILD_RUSTC_WRAPPER:-}" ] \
+    && command -v kache > /dev/null; then
+    if kache config set cache.demand_timeout_secs 120 >/dev/null 2>&1; then
+      export RUSTC_WRAPPER=kache
+    fi
   fi
 }
 
